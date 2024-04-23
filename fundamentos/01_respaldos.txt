@@ -1,0 +1,100 @@
+// Acceder a un host
+
+
+mysql -h [host] -u [usuario] -p
+
+
+
+
+// Ejecutar consultas sin permanecer en el server
+
+
+mysql -h [host] -u [usuario] -p -e "[consulta]"
+
+
+mysql --defaults-file="C:\...\parametros.cfg" -h [host] -e "[consulta]"
+
+
+
+
+// Recuperar un respaldo
+
+
+mysql -h [host] -u [usuario] -p [base_datos] < "C:\...\[respaldo].sql"
+
+
+mysql --defaults-file="C:\...\parametros.cfg" -h [host] [base_datos] < "C:\...\[respaldo].sql"
+
+
+
+
+// Realizar un respaldo
+
+
+mysqldump -h [host] -u [usuario] -p [base_datos] > "C:\...\[respaldo]_[año-mes-dia-hora-min-seg].sql"
+
+
+mysqldump --defaults-file="C:\...\parametros.cfg" -h [host] [base_datos] > "C:\...\[respaldo]_[año-mes-dia-hora-min-seg].sql"
+
+
+	Con espacios:
+
+mysqldump --defaults-file="C:\...\parametros.cfg" -h [host] [base_datos] > "C:\...\[respaldo]_%date:/=%_%time:~0,2%-%time:~3,2%-%time:~6,2%.sql"
+
+
+	Sin espacios:
+
+mysqldump --defaults-file="C:\...\parametros.cfg" -h [host] [base_datos] > "C:\...\[respaldo]_%date:/=%%time:~0,2%%time:~3,2%%time:~6,2%.sql"
+
+
+	Con ciclo for:
+
+mysql --defaults-file="C:\...\parametros.cfg" -s -N -e "SHOW DATABASES" | for /F "usebackq" %D in (`findstr /V "information_schema performance_schema"`) do mysqldump --defaults-file="C:\...\parametros.cfg" %D > C:\...\%D.sql
+
+
+	Con ciclo for y fecha:
+
+mysql --defaults-file="C:\...\parametros.cfg" -s -N -e "SHOW DATABASES" | for /F "usebackq" %D in (`findstr /V "information_schema performance_schema"`) do mysqldump --defaults-file="C:\...\parametros.cfg" %D > C:\...\%D_%date:/=%%time:~0,2%%time:~3,2%%time:~6,2%.sql
+
+
+	Archivo .bat:
+
+C:\...\respaldo.bat [base_datos]
+
+
+
+
+Archivo de configuración (parametros.cfg):
+
+
+[client]
+
+user=
+
+password=
+
+
+
+
+Archivo de respaldo (respaldo.bat):
+
+
+SET BASE_DATOS=%1
+
+SET ARCHIVO_CONFIGURACION="C:\...\parametros.cfg"
+
+SET RUTA_RESPALDO="C:\..."
+
+SET ARCHIVO_RESPALDO=%BASE_DATOS%_%date:/=%_%time:~0,2%-%time:~3,2%-%time:~6,2%.sql
+
+SET RUTA_ARCHIVO_RESPALDO="%RUTA_RESPALDO%/%ARCHIVO_RESPALDO%"
+
+@echo off
+
+mysqldump --defaults-file="%ARCHIVO_CONFIGURACION%" %BASE_DATOS% > "%RUTA_ARCHIVO_RESPALDO%"
+
+echo Respaldo Completado!
+
+pause
+
+exit
