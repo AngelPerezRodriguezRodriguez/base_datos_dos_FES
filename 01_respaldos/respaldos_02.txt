@@ -1,0 +1,66 @@
+// Creamos de un archivo de configuración para almacenar el usuario y contraseña
+
+
+
+
+// Usamos el archivo de configuración
+
+
+* Consultamos las B.D.
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost -e "SHOW DATABASES"
+
+
+* Creamos una B.D. local
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost -e "CREATE DATABASE colegio2857"
+
+
+* Recuperamos un respaldo
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost colegio2857 < "C:\...\colegio.sql"
+
+
+* Consultamos las tablas de una B.D.
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost -e "SHOW TABLES FROM colegio2857"
+
+
+* Creamos un respaldo
+
+	mysqldump --defaults-file="C:\...\parametros.cfg" -h localhost colegio2857 > "C:\...\colegio2867_%date:/=%%time:~0,2%%time:~3,2%%time:~6,2%.sql"
+
+* Observaciones
+
+	%date:/=%
+	%time:~0,2%
+	%time:~3,2%
+	%time:~6,2%
+
+
+* Recuperamos otro respaldo
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost colegio2857 < "C:\...\libros.sql"
+
+
+* Consultamos las B.D. que contengan '2857' en su nombre
+
+	mysql --defaults-file="C:\...\parametros.cfg" -h localhost -e "SHOW DATABASES LIKE '%2857%'"
+
+
+
+
+Resumen
+
+a.	Creamos una B.D. local colegio2857
+	desde CMD, con archivo de configuración
+
+b.	Recuperamos el respaldo colegio.sql en colegio2857
+	desde CMD, con archivo de configuración
+
+c.	Creamos un respaldo de colegio2857
+	desde CMD, con archivo de configuración, fecha y hora automática
+
+d.	Recuperamos el respaldo libros.sql en colegio2857
+	desde CMD, con archivo de configuración
+	

@@ -1,0 +1,69 @@
+* Verificamos que C:\Program Files\MySQL\MySQL Server 8.0\bin 
+se encuentre en las variables de entorno
+
+
+
+
+// Conexión básica a una B.D.
+
+	-h ->	nombre del host o IP
+
+	-P ->	puerto
+
+	-u ->	usuario
+		
+	-p ->	contraseña
+
+
+* Ejemplos
+	
+	mysql -h localhost      -u root   -p
+	mysql -h bd.arcelia.net -u fesalu -p
+
+
+* Ejecutamos consultas sin permanecer en el servidor
+
+	mysql -h localhost      -u root   -p -e "SHOW DATABASES"
+	mysql -h bd.arcelia.net -u fesalu -P -e "SHOW DATABASES"
+
+
+
+
+// Creamos una B.D. local
+
+	mysql -h localhost -u root -p -e "CREATE DATABASE colegio2857";
+
+
+
+
+// Recuperamos un respaldo
+
+	mysql -h localhost -u root -p colegio2857 < "C:\...\colegio.sql"
+
+	También a través de Workbench: Navigator, Administration, Data Import/Restore...
+
+
+
+
+// Creamos un respaldo
+
+	mysqldump -h localhost -u root -p colegio2857 > "C:\...\colegio2857_20240424042815.sql"
+
+	También a través de Workbench: Navigator, Administration, Data Export...
+
+
+
+
+Resumen
+
+a.	Creamos una B.D. local colegio2857
+  	desde CMD, sin archivo de configuración
+
+b. 	Recuperamos el respaldo colegio.sql en colegio2857
+	desde CMD, sin archivo de configuración
+
+c. 	Creamos un respaldo de colegio2857
+	desde CMD, sin archivo de configuración, fecha y hora manual 
+
+d. 	Creamos un respaldo de colegio2857
+	a través de Workbench
