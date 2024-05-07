@@ -1,0 +1,53 @@
+// Niveles de aislamiento
+
+	SHOW VARIABLES LIKE '%isolation%';
+
+	SHOW VARIABLES LIKE '%autocommit%';
+
+
+	SELECT @@global.transaction_isolation;
+
+	SELECT @@global.autocommit;
+
+
+	SET autocommit = [0 | 1];
+
+	SET SESSION TRANSACTION ISOLATION LEVEL [SERIALIZABLE | READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ];
+
+	SET SESSION transaction_isolation = [SERIALIZABLE | READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ];
+
+
+
+
+// Instrucciones básicas de una transacción
+
+	START TRANSACTION;
+
+	ROLLBACK;
+
+	COMMIT;
+
+
+
+
+// Puntos de retorno de una transacción
+
+	START TRANSACTION; 
+
+	SAVEPOINT [nombre_punto];
+
+	ROLLBACK TO [nombre_punto];
+
+
+
+
+* Las variables comienzan con @
+
+* Las variables del sistema con @@
+
+
+
+
+* DML (Data Manipulation Language) -> INSERT, UPDATE, DELETE, SELECT
+
+* DDL (Data Defnition Language)    -> CREATE, ALTER, DROP

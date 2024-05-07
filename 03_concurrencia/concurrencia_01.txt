@@ -1,0 +1,238 @@
+// Elementos respecto a niveles de aislamiento
+
+	SHOW VARIABLES LIKE '%isolation%';
+
+
+
+
+// Elementos respecto a niveles de autocommit
+
+	SHOW VARIABLES LIKE '%autocommit%';
+
+
+
+
+// Podemos ver variables
+
+	SELECT @@global.transaction_isolation;
+
+	SELECT @@global.autocommit;
+
+
+
+
+// Podemos crear variables
+
+	SET @nombre = 'Angel';
+
+	SET @costo = 120;
+
+	SELECT @nombre, @costo;
+
+	SELECT @nombre, @costo * 1.16 AS con_iva;
+
+* Las variables comienzan con @
+
+* Las variables del sistema comienzan con @@
+
+
+
+
+// Ejecutamos el script del archivo concurrencia.txt
+
+
+
+
+[T01] USE concurrencia;
+
+[T01] SELECT * FROM cuentas;
+
+[T02] USE concurrencia;
+
+[T02] SELECT * FROM cuentas;
+
+
+
+
+[T01] UPDATE cuentas SET saldo = saldo + 100;
+
+[T01] SELECT * FROM cuentas;
+
+[T02] SELECT * FROM cuentas;
+
+	* Las dos ven el mismo estado consistente de la B.D.
+
+[T02] UPDATE cuentas SET saldo = saldo + 100;
+
+[T02] SELECT * FROM cuentas;
+
+[T01] SELECT * FROM cuentas;
+
+	* Las dos ven el mismo estado consistente de la B.D.
+
+
+
+
+[T01] SET autocommit = 0;
+
+[T02] SET autocommit = 0;
+
+	* Este cambio solo es a nivel sesión
+
+[T01] UPDATE cuentas SET saldo = saldo + 100;
+
+[T01] SELECT * FROM cuentas;
+
+	* Se está leyendo del buffer
+
+[T02] SELECT * FROM cuentas;
+
+	* No está leyendo del buffer ni el último estado consistente
+
+[T01] COMMIT;
+
+[T01] SELECT * FROM cuentas;
+
+[T02] SELECT * FROM cuentas;
+
+	* No está leyendo del buffer ni el último estado consistente
+
+	* No se verá reflejado el cambio de [T01] en [T02] a pesar de commitear en [T01]
+
+[T02] COMMIT;
+
+	* Es necesario commitear para concluir la transacción 
+	
+	y así leer el último estado consistente
+
+
+
+
+[T01] INSERT INTO cuentas VALUES (66, 3453);
+
+[T01] DELETE FROM cuentas WHERE id = 3;
+
+[T01] SELECT * FROM cuentas;
+
+	* Se está leyendo del buffer
+
+[T02] SELECT * FROM cuentas;
+
+	* No está leyendo del buffer ni el último estado consistente
+
+[T02] COMMIT;
+
+	* Se está leyendo el último estado consistente, 
+
+	pero no los cambios en buffer que se realizaron en [T01]
+
+[T01] ROLLBACK;
+
+	* No se commitean los cambios en buffer y regresamos al último estado consistente
+
+[T02] SELECT * FROM cuentas;
+
+	* No está leyendo del buffer ni el último estado consistente
+
+[T02] COMMIT;
+
+	* Se está leyendo el último estado consistente
+
+
+
+
+Con Repeatable Read podemos leer del buffer pero no cambiar algo que no esté commiteado,
+
+por eso se presenta Phantom Read. Hasta ahora, no estamos bloqueando, sólo no commiteando.
+
+
+
+
+[T01] INSERT INTO cuentas VALUES (66, 3453);
+
+[T01] COMMIT;
+
+[T02] SELECT * FROM cuentas;
+
+[T02] COMMIT;
+
+[T01] SELECT * FROM cuentas WHERE id = 66 FOR UPDATE;
+
+	* Estamos bloqueando el registro
+
+[T02] UPDATE cuentas SET saldo = 1500 WHERE id = 66;
+
+	* [T02] No puede hacer nada en el registro que está ocupando [T01]
+	  
+	* Después de un tiempo Deadlock entra en acción y detiene [T02] pero no [T01]
+
+[T02] UPDATE cuentas SET saldo = 1500 WHERE id = 66;
+
+[T01] ROLLBACK;
+
+[T02] COMMIT;
+
+[T01] SELECT * FROM cuentas;
+
+[T01] COMMIT;
+
+
+
+
+[T01] SELECT * FROM cuentas WHERE id = 66 FOR UPDATE;
+
+[T02] UPDATE cuentas SET saldo = 3500 WHERE id = 3;
+
+	* Estamos trabajando en un registro diferente
+
+[T02] COMMIT;
+
+[T01] SELECT * FROM cuentas;
+
+[T01] COMMIT;
+
+
+
+
+[T01] LOCK TABLES cuentas WRITE;
+
+[T02] UPDATE cuentas SET saldo = saldo + 100;
+
+	* Deadlock entra en acción inmediatamente por la granularidad del bloqueo
+
+[T02] SHOW FULL PROCESSLIST\g;
+
+	* FULL muestra mayor información y '\g' genera un reporte en lugar de una lista
+	  
+	* event_scheduler: Daemon indica que se inicia cada vez que lo hace el server,
+	  
+	también lleva todos los logs
+
+[T01] UNLOCK TABLES;
+
+
+
+
+SHOW VARIABLES LIKE '%dead%';
+
+	* 'innodb_deadlock_detect' detecta si está bloqueado cualquier tipo de granularidad
+
+	* 'innodb' es el motor que tienen las B.D. MySQL para poder realizar todo eso
+	  
+
+
+
+MySQL tiene siete tipos de tablas, es un motor de tablas que permite transacciones, 
+
+bloqueos, triggers, etc. Antes las tablas eran de tipo MyISAM y no permitía nada.
+
+'show create table cuentas' nos muestra InnoDB. Lo que está fuera de paréntesis no es 
+
+SQL estándar, es decir, no funciona en Oracle, PostgreSQL, etc.
+
+
+
+
+SHOW VARIABLES LIKE '%lock%';
+
+	* 'max_write_lock_count' son los milisegundos antes de que Deadlock entre en acción

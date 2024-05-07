@@ -1,0 +1,146 @@
+// Ejecutamos nuevamente el script del archivo concurrencia.txt
+
+
+
+
+// Cuando autocommit está encendido, podemos iniciar explícitamente una transacción
+
+[T01] START TRANSACTION;
+
+[T01] UPDATE cuentas SET saldo = saldo * 100 WHERE id = 1;
+
+	* [T02] no está leyendo del buffer
+
+[T01] ROLLBACK;
+
+
+
+
+[T02] SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+	* Este cambio solo es a nivel sesión
+
+	* [T02] ahora va a poder leer del buffer
+
+[T02] SHOW VARIABLES LIKE '%isolation%';
+
+[T01] START TRANSACTION;
+
+[T01] UPDATE cuentas SET saldo = saldo + 100;
+
+[T02] SELECT * FROM cuentas;
+
+[T03] SELECT * FROM cuentas;
+
+	* [T01] aún no termina la transacción
+
+	* [T02] permite leer del buffer
+
+	* [T03] sólo lee commiteado al tener Repeatable Read como nivel de aislamiento
+
+[T01] COMMIT;
+
+
+
+
+Si hay una transacción en camino sobre el mismo elemento a bloquear (en este caso la tabla),
+	
+[T02] va a leer de buffer. Si no hay transacción, no hay buffer y se leer directamente de la B.D.
+
+A partir de que podemos leer del buffer, tenemos Dirty Read y a partir de este último tenemos
+	
+Non-Repeatable Read (menos registros) y Phantom Read (más registros)
+
+
+
+
+[T02] START TRANSACTION;
+
+[T02] SELECT * FROM cuentas WHERE saldo < 2000; 
+
+[T01] START TRANSACTION;
+
+[T01] UPDATE cuentas SET saldo = 2100 WHERE id  = 3;
+
+[T02] SELECT * FROM cuentas WHERE saldo < 2000;
+
+	* Se está leyendo del buffer
+
+	* Muestra menos registros (Non-Repeatable Read)
+
+[T01] ROLLBACK;
+
+[T02] SELECT * FROM cuentas WHERE saldo < 2000;
+
+[T02] ROLLBACK;
+
+
+
+
+[T02] START TRANSACTION;
+
+[T02] SELECT SUM(saldo) FROM cuentas;
+
+[T01] START TRANSACTION;
+
+[T01] INSERT INTO cuentas VALUES (4, 3000);
+
+[T02] SELECT SUM(saldo) FROM cuentas;
+
+[T02] SELECT * FROM cuentas WHERE saldo > 2000;
+
+	* Se está leyendo del buffer
+
+	* Muestra más registros (Phantom Read)
+
+[T01] ROLLBACK;
+
+[T02] ROLLBACK;
+
+
+
+
+Si usamos Repeatable Read y no usamos transacciones, no caemos en Phantom Read; pero 
+
+si usamos transacciones, podemos caer en Phantom Read. Dejaríamos que se leyera del buffer 
+
+si hay algo que está deteniendo las lecturas y tengo pocas escrituras.
+
+
+
+
+// Puntos de retorno de una transacción
+
+* Dentro de la transacción podemos guardar puntos a los cuales podemos regresar dentro de la misma
+
+* Los puntos se guardan con una marca de tiempo; podemos regresar a un punto anterior, pero no posterior
+
+* No hay garantía de que los puntos se almacenen en 'log_bin'
+
+* Se ocupan principalmente en los start procedures
+
+[T01] START TRANSACTION; 
+
+[T01] SAVEPOINT punto_01; 
+
+[T01] DELETE FROM cuentas WHERE id = 1; 
+
+[T01] SAVEPOINT punto_02;
+
+[T01] DELETE FROM cuentas WHERE id = 2;
+
+[T01] SAVEPOINT punto_03;
+
+[T01] UPDATE cuentas SET saldo = 3000 WHERE id = 3;
+
+[T01] ROLLBACK TO punto_03;
+
+[T01] ROLLBACK TO punto_02;
+
+[T01] ROLLBACK TO punto_01;
+
+[T01] ROLLBACK TO punto_02;
+
+	* No se puede acceder a un punto posterior del tiempo actual del punto
+
+[T01] ROLLBACK;
