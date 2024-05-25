@@ -50,4 +50,4 @@
 
 * DML (Data Manipulation Language) -> INSERT, UPDATE, DELETE, SELECT
 
-* DDL (Data Defnition Language)    -> CREATE, ALTER, DROP
+* DDL (Data Definition Language)   -> CREATE, ALTER, DROP

@@ -4,7 +4,7 @@ Podemos agregar privilegios a una tabla de dos formas:
 1. Nivel de columna
 
 * No podemos cambiar el nombre de los campos
-* La sentencia SELECT * FROM [nombre_tabla] no se puede utilizar
+* La sentencia SELECT * FROM [tabla] no se puede utilizar
 
 2. Nivel de vista
 
@@ -26,13 +26,10 @@ SELECT
 FROM
     mysql.USER;
 
-DROP USER 
-	'ustest'@'localhost';
+DROP USER 'ustest'@'localhost';
 
-CREATE USER 
-	'ustest'@'localhost' 
-IDENTIFIED BY 
-	'123456%';
+CREATE USER 'ustest'@'localhost' 
+IDENTIFIED BY '123456%';
 
 
 
@@ -46,10 +43,8 @@ FROM
 GRANT 
 	SELECT (clave_alu, ap_paterno, ap_materno, nombre, curp),
 	SHOW VIEW 
-ON 
-	colegio2857.alumnos 
-TO 
-	'ustest'@'localhost';
+ON colegio2857.alumnos 
+TO 'ustest'@'localhost';
 /*
 Estamos otorgando los privilegios SELECT y SHOW VIEW.
 SHOW VIEW no es absolutamente necesario, pero se puede llegar a ocupar.
@@ -66,10 +61,8 @@ GRANT
 	SELECT (clave_alu, pago, fecha_pago, id),
 	UPDATE (fecha_pago),
 	SHOW VIEW 
-ON 
-	colegio2857.pagos 
-TO 
-	'ustest'@'localhost';
+ON colegio2857.pagos 
+TO 'ustest'@'localhost';
 -- Estamos otorgando los privilegios SELECT, UPDATE y SHOW VIEW
 
 
@@ -83,8 +76,7 @@ sino sobre todo el registro, ya que el privilegio no discrimina campos.
 
 
 
-SHOW GRANTS FOR 
-	'ustest'@'localhost';
+SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 -- GRANT SELECT (`ap_materno`, `ap_paterno`, `clave_alu`, `curp`, `nombre`), SHOW VIEW ON `colegio2857`.`alumnos` TO `ustest`@`localhost`
 -- GRANT SELECT (`clave_alu`, `fecha_pago`, `id`, `pago`), UPDATE (`fecha_pago`), SHOW VIEW ON `colegio2857`.`pagos` TO `ustest`@`localhost`
@@ -96,22 +88,17 @@ SHOW GRANTS FOR
 REVOKE
 	SELECT (clave_alu, ap_paterno, ap_materno, nombre, curp), 
 	SHOW VIEW 
-ON 
-	colegio2857.alumnos 
-FROM 
-	'ustest'@'localhost';
+ON colegio2857.alumnos 
+FROM 'ustest'@'localhost';
 
 REVOKE
 	SELECT (clave_alu, pago, fecha_pago, id),
 	UPDATE(fecha_pago),
 	SHOW VIEW 
-ON 
-	colegio2857.pagos 
-FROM 
-	'ustest'@'localhost';
+ON colegio2857.pagos 
+FROM 'ustest'@'localhost';
 
-SHOW GRANTS FOR 
-	'ustest'@'localhost';
+SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 
 
@@ -136,7 +123,7 @@ SELECT
     *
 FROM
     alumnas;
--- La sentencia SELECT * FROM [nombre_tabla] se puede utilizar
+-- La sentencia SELECT * FROM [tabla] se puede utilizar
 
 SHOW TABLES;
 -- Aparece la tabla 'alumnas'
@@ -181,7 +168,8 @@ FROM
     alumnas
 WHERE
     curp <> '';
--- '<>' es lo mismo que '=!'
+-- Podemos utilizar '!='
+-- y también '<>'
 
 DESC alumnas;
 -- No hay valor para el campo 'key'
@@ -264,10 +252,10 @@ CREATE OR REPLACE VIEW alumnos_pagos AS
         pagos p ON (a.clave_alu = p.clave_alu)
     GROUP BY a.clave_alu;
  
-SELECT
-	* 
+SELECT 
+    *
 FROM
-	alumnos_pagos;
+    alumnos_pagos;
 */
 
 SELECT 
@@ -280,22 +268,16 @@ WHERE
 
 
 
-GRANT 
-	SELECT 
-ON 
-	colegio2857.alumnas 
-TO 
-	'ustest'@'localhost';
+GRANT SELECT 
+ON colegio2857.alumnas 
+TO 'ustest'@'localhost';
 
-GRANT 
-	SELECT 
-ON 
-	colegio2857.alumnos_pagos 
-TO 
-	'ustest'@'localhost';
+GRANT SELECT 
+ON colegio2857.alumnos_pagos 
+TO 'ustest'@'localhost';
 /*
 Versiones previas a la ocho de MySQL, si surge el problema de no poder ver la vista 'alumnas' 
-porque no tenemos privilegio de la tabla 'alumnos', agregamos SHOW VIEW ON [nombre_tabla]
+porque no tenemos privilegio de la tabla 'alumnos', agregamos SHOW VIEW ON [tabla]
 tal como lo hicimos al principio.
 */
 

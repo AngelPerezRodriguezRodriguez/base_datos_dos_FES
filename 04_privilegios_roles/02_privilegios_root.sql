@@ -1,13 +1,17 @@
-SELECT * FROM mysql.USER;
+SELECT 
+    *
+FROM
+    mysql.USER;
 
 DROP USER 'ustest'@'localhost';
 
-CREATE USER 'ustest'@'localhost' IDENTIFIED BY '123456%';
+CREATE USER 'ustest'@'localhost' 
+IDENTIFIED BY '123456%';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 
--- Tenemos privilegio de uso (usage) sobre todas las B.D. (*) y todos los objetos del servidor (*)
+-- Tenemos privilegio de uso (USAGE) sobre todas las B.D. (*) y todos los objetos del servidor (*)
 
 
 
@@ -24,17 +28,21 @@ Creamos una nueva conexión a través de Workbench:
 
 -- [1.2]
 
-REVOKE USAGE ON *.* FROM 'ustest'@'localhost';
+REVOKE USAGE 
+ON *.* 
+FROM 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 
 -- Para reflejar el privilegio revocado, hay que hacer un par de cosas más
--- Pero por el momento se sigue mostrando el privilegio 'usage' a pesar de que lo hemos revocado
+-- Pero por el momento se sigue mostrando el privilegio USAGE a pesar de que lo hemos revocado
 
-GRANT ALL ON *.* TO 'ustest'@'localhost';
--- 'all' refiere a todos los privilegios de B.D. y objetos, pero no administrativos
--- 'usage' no está dentro de todos los privilegios que acabamos de asignar
+GRANT ALL 
+ON *.* 
+TO 'ustest'@'localhost';
+-- ALL refiere a todos los privilegios de B.D. y objetos, pero no administrativos
+-- USAGE no está dentro de todos los privilegios que acabamos de asignar
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `ustest`@`localhost`
@@ -44,12 +52,16 @@ SHOW GRANTS FOR 'ustest'@'localhost';
 
 -- [2.2]
 
-REVOKE ALL ON *.* FROM 'ustest'@'localhost';
+REVOKE ALL 
+ON *.* 
+FROM 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 
-GRANT ALL ON colegio2857.* TO 'ustest'@'localhost';
+GRANT ALL 
+ON colegio2857.* 
+TO 'ustest'@'localhost';
 -- Ahora ya no concedemos los privilegios para todas las B.D. 
 -- sólo para 'colegio2857' y sobre todos sus objetos
 
@@ -61,33 +73,39 @@ SHOW GRANTS FOR 'ustest'@'localhost';
 
 -- [3.2]
 
-REVOKE INSERT, UPDATE, DELETE ON colegio2857.* FROM 'ustest'@'localhost';
+REVOKE INSERT, UPDATE, DELETE 
+ON colegio2857.* 
+FROM 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 -- GRANT SELECT, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `colegio2857`.* TO `ustest`@`localhost`
 
--- Ya no posee 'insert', 'update' y 'delete' (los primeros tres privilegios)
+-- Ya no posee INSERT, UPDATE y DELETE (los primeros tres privilegios)
 
 
 
 -- [4.2]
 
-GRANT INSERT, UPDATE, DELETE ON colegio2857.niveles TO 'ustest'@'localhost';
+GRANT INSERT, UPDATE, DELETE 
+ON colegio2857.niveles 
+TO 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
 -- GRANT SELECT, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `colegio2857`.* TO `ustest`@`localhost`
 -- GRANT INSERT, UPDATE, DELETE ON `colegio2857`.`niveles` TO `ustest`@`localhost`
 
--- 'insert', 'update' y 'delete' sólo son permitidos sobre la tabla 'niveles' de 'colegio2857'
--- La tabla 'niveles' tiene los privilegios 'select', 'create', 'drop', etc. por ser de nivel superior
+-- INSERT, UPDATE y DELETE sólo son permitidos sobre la tabla 'niveles' de 'colegio2857'
+-- La tabla 'niveles' tiene los privilegios SELECT, CREATE, DROP, etc. por ser de nivel superior
 
 
 
 -- [5.2]
 
-GRANT SELECT ON bdconcurrencia.* TO 'ustest'@'localhost';
+GRANT SELECT 
+ON bdconcurrencia.* 
+TO 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
@@ -120,9 +138,13 @@ USE escuela2857;
 
 SHOW TABLES;
 
-GRANT SELECT ON escuela2857.alumnos TO 'ustest'@'localhost';
+GRANT SELECT 
+ON escuela2857.alumnos 
+TO 'ustest'@'localhost';
 
-GRANT SELECT ON escuela2857.pagos TO 'ustest'@'localhost';
+GRANT SELECT 
+ON escuela2857.pagos 
+TO 'ustest'@'localhost';
 
 SHOW GRANTS FOR 'ustest'@'localhost';
 -- GRANT USAGE ON *.* TO `ustest`@`localhost`
@@ -138,4 +160,7 @@ SHOW GRANTS FOR 'ustest'@'localhost';
 
 DROP USER 'ustest'@'localhost';
 
-SELECT * FROM mysql.USER;
+SELECT 
+    *
+FROM
+    mysql.USER;

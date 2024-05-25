@@ -1,8 +1,9 @@
 -- [1.1]
+
 SHOW DATABASES;
 -- Sólo muestra las B.D. 'schema'
 
-SELECT USER(), current_role();
+SELECT USER(), CURRENT_ROLE();
 -- ustest@localhost, NONE
 
 -- Los privilegios de los roles asignados no se cargan automáticamente a la sesión
@@ -10,10 +11,12 @@ SELECT USER(), current_role();
 USE colegio2857;
 -- No tenemos privilegios sobre la B.D.
 
-SET ROLE readapp;
--- Para cargar un rol necesitamos la cláusula 'set'
 
-SELECT USER(), current_role();
+
+SET ROLE readapp;
+-- Para cargar un rol necesitamos la cláusula SET
+
+SELECT USER(), CURRENT_ROLE();
 -- ustest@localhost, `readapp`@`%`
 
 SHOW DATABASES;
@@ -22,23 +25,31 @@ USE colegio2857;
 
 SHOW TABLES;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-INSERT INTO niveles VALUES(8, 'DR');
--- Solo tenemos el privilegio 'select' contenido en el rol 'readapp'
+INSERT INTO niveles 
+VALUES(8, 'DR');
+-- Solo tenemos el privilegio SELECT contenido en el rol 'readapp'
 
 
 
 SET ROLE writeapp;
 -- Cargar otro rol remplaza el anterior
 
-SELECT USER(), current_role();
+SELECT USER(), CURRENT_ROLE();
 -- ustest@localhost, `writeapp`@`%`
 
-INSERT INTO niveles VALUES(8, 'DR');
+INSERT INTO niveles 
+VALUES(8, 'DR');
 
-SELECT * FROM niveles;
--- Solo tenemos los privilegios 'insert', 'update' y 'delete' 
+SELECT 
+    *
+FROM
+    niveles;
+-- Solo tenemos los privilegios INSERT, UPDATE y DELETE
 -- contenidos en el rol 'writeapp'
 
 
@@ -46,21 +57,30 @@ SELECT * FROM niveles;
 SET ROLE ALL;
 -- Pero podemos cargar todos los roles asignados
 
-SELECT USER(), current_role();
+SELECT USER(), CURRENT_ROLE();
 -- ustest@localhost, `readapp`@`%`,`writeapp`@`%`
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-UPDATE niveles SET nombre = 'DOC' WHERE id_nivel = 8;
+UPDATE niveles 
+SET 
+    nombre = 'DOC'
+WHERE
+    id_nivel = 8;
 
-DELETE FROM niveles WHERE id_nivel = 8;
+DELETE FROM niveles 
+WHERE
+    id_nivel = 8;
 
 
 
 SET ROLE NONE;
 -- También podemos quitar todos los roles
 
-SELECT USER(), current_role();
+SELECT USER(), CURRENT_ROLE();
 -- ustest@localhost, NONE
 
 
@@ -71,4 +91,4 @@ SET ROLE writeapp;
 SET ROLE ALL;
 -- Ya no existe ningún rol asignado al usuario que podamos cargar
 
-SELECT USER(), current_role();
+SELECT USER(), CURRENT_ROLE();

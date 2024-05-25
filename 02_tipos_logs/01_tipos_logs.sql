@@ -19,10 +19,10 @@ SHOW VARIABLES LIKE '%error%';
 
 'log_error' realiza un tracking de todas las veces que sucede algo inesperado en el servidor.
 Es una variable que sólo podemos cambiar cuando el servidor está apagado a través del archivo 
-de configuración my.ini
+de configuración 'my.ini'.
 
 SET cambia una variable en el servidor en tiempo de ejecución. Si queremos que la variable 
-cambie a un estado permanente, editamos el archivo de configuración my.ini
+cambie a un estado permanente, editamos el archivo de configuración 'my.ini'.
 
  * Intentamos cambiar la ruta de almacenamiento
 
@@ -56,9 +56,9 @@ además de que crece exponencialmente; nos sirve más como un historial.
    'information_schemma' es el diccionario de datos.
  
 		SELECT 
-		table_schema, 
-		SUM(table_rows) AS no_registros
-		FROM information_schema.TABLES
+			table_schema, SUM(table_rows) AS no_registros
+		FROM
+			information_schema.TABLES
 		GROUP BY table_schema
 		ORDER BY 2 DESC;
  
@@ -107,9 +107,12 @@ Una consulta que dura más de dos segundos es considerada como lenta.
    A pesar de usar la instrucción JOIN no hay igualdad de PK y FK (ON, USING o NATURAL),
    por lo tanto, es un producto cartesiano.
         
-		SELECT * 
-		FROM colegio2857.alumnos 
-		JOIN colegio2857.pagos;
+		SELECT 
+			*
+		FROM
+			colegio2857.alumnos
+				JOIN
+			colegio2857.pagos;
 
  * Visualizamos el contenido de [nuevo_archivo]-slow.log
  

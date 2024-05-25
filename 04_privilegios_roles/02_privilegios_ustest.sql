@@ -25,21 +25,40 @@ USE colegio2857;
 
 SHOW TABLES;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
 -- Podemos comprobar los privilegios sobre la B.D. y sobre todos sus objetos:
 
-INSERT INTO niveles VALUES (8, 'DR');
+INSERT INTO niveles 
+VALUES(8, 'DR');
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-UPDATE niveles SET nombre = 'DOC' WHERE id_nivel = 8;
+UPDATE niveles 
+SET 
+    nombre = 'DOC'
+WHERE
+    id_nivel = 8;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-DELETE FROM niveles WHERE id_nivel = 8;
+DELETE FROM niveles 
+WHERE
+    id_nivel = 8;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
 
 
@@ -47,21 +66,36 @@ SELECT * FROM niveles;
 
 USE colegio2857;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-INSERT INTO niveles VALUES (8, 'DR');
+INSERT INTO niveles 
+VALUES(8, 'DR');
 
-UPDATE niveles SET nombre = 'DOC' WHERE id_nivel = 8;
+UPDATE niveles 
+SET 
+    nombre = 'DOC'
+WHERE
+    id_nivel = 8;
 
-DELETE FROM niveles WHERE id_nivel = 8;
+DELETE FROM niveles 
+WHERE
+    id_nivel = 8;
 
--- 'insert', 'udpate' y 'delete' son comandos denegados
+-- INSERT, UPDATE y DELETE son comandos denegados
 
-SELECT * FROM grados;
+SELECT 
+    *
+FROM
+    grados;
 
-DELETE FROM grados WHERE id_grado = 16;
+DELETE FROM grados 
+WHERE
+    id_grado = 16;
 
--- 'insert', 'udpate' y 'delete' son denegados sobre todos los objetos de 'colegio2857'
+-- INSERT, UPDATE y DELETE son denegados sobre todos los objetos de 'colegio2857'
 
 
 
@@ -69,19 +103,34 @@ DELETE FROM grados WHERE id_grado = 16;
 
 USE colegio2857;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;
 
-INSERT INTO niveles VALUES (8, 'DR');
+INSERT INTO niveles 
+VALUES(8, 'DR');
 
-UPDATE niveles SET nombre = 'DOC' WHERE id_nivel = 8;
+UPDATE niveles 
+SET 
+    nombre = 'DOC'
+WHERE
+    id_nivel = 8;
 
-DELETE FROM niveles WHERE id_nivel = 8;
+DELETE FROM niveles 
+WHERE
+    id_nivel = 8;
 
-SELECT * FROM grados;
+SELECT 
+    *
+FROM
+    grados;
 
-DELETE FROM grados WHERE id_grado = 16;
+DELETE FROM grados 
+WHERE
+    id_grado = 16;
 
--- 'insert', 'udpate' y 'delete' sólo son permitidos sobre la tabla 'niveles'
+-- INSERT, UPDATE y DELETE sólo son permitidos sobre la tabla 'niveles'
 
 
 
@@ -94,8 +143,11 @@ USE bdconcurrencia;
 
 SHOW TABLES;
 
-SELECT * FROM cuentas;
--- Sólo tenemos el privilegio 'select'
+SELECT 
+    *
+FROM
+    cuentas;
+-- Sólo tenemos el privilegio SELECT
 
 
 
@@ -109,8 +161,17 @@ USE escuela2857;
 SHOW TABLES;
 -- Sólo muestra la tabla 'alumnos' y 'pagos'
 
-SELECT * FROM alumnos;
+SELECT 
+    *
+FROM
+    alumnos;
 
-SELECT * FROM pagos;
+SELECT 
+    *
+FROM
+    pagos;
 
-SELECT * FROM niveles;
+SELECT 
+    *
+FROM
+    niveles;

@@ -1,0 +1,139 @@
+// Mostrar el usuario actual
+
+	SELECT USER();
+
+// Mostrar el rol actual
+
+	SELECT CURRENT_ROLE();
+
+// Mostrar los usuarios en proceso
+
+	SHOW PROCESSLIST;
+
+// Mostrar todos los usuarios y roles con sus autenticaciones
+
+	SELECT 
+		* 
+	FROM 
+		mysql.USER;
+
+
+
+
+// Crear un usuario
+
+	CREATE USER '[nombre_usuario]'@'[contexto]'
+	IDENTIFIED BY '[password]';
+
+// Bloquear y desbloquear
+
+	ALTER USER '[nombre_usuario]'@'[contexto]'
+	IDENTIFIED BY '[password]' ACCOUNT LOCK;
+
+	ALTER USER '[nombre_usuario]'@'[contexto]'
+	IDENTIFIED BY '[password]' ACCOUNT UNLOCK;
+
+// Borrar
+
+	DROP USER '[nombre_usuario]'@'[contexto]';
+
+	SHOW PROCESSLIST;
+
+	KILL [id_proceso_usuario];
+
+	FLUSH PRIVILEGES;
+
+
+
+
+* Modificar la estructura de una tabla         -> ALTER
+
+* Modificar la tabla                           -> UPDATE
+
+* Acceso de lectura y poder consultar la tabla -> SELECT
+
+* Escribir en la tabla                         -> INSERT, UPDATE, DELETE
+
+
+* DML (Data Manipulation Language)             -> INSERT, UPDATE, DELETE, SELECT
+
+* DDL (Data Definition Language)               -> CREATE, ALTER, DROP
+
+
+
+
+// Mostrar todos privilegios disponibles
+
+	SHOW PRIVILEGES;
+
+// Mostrar los privilegios de un usuario
+
+	SHOW GRANTS FOR '[nombre_usuario]'@'[contexto]';
+
+// Conceder y revocar privilegios
+
+	GRANT [privilegios] 
+	ON [base_datos].[tabla] 
+	TO '[nombre_usuario]'@'[contexto]'; 
+
+	REVOKE [privilegios]
+	ON [base_datos].[tabla] 
+	FROM '[nombre_usuario]'@'[contexto]'; 
+
+
+
+
+// Crear rol
+
+	CREATE ROLE [nombre_rol];
+
+	CREATE ROLE '[nombre_rol]'@'[contexto]';
+
+// Mostrar los privilegios de un rol
+
+	SHOW GRANTS FOR [nombre_rol];
+
+// Mostrar los privilegios de un usuario
+
+	SHOW GRANTS FOR '[nombre_usuario]'@'[contexto]'
+
+	SHOW GRANTS FOR '[nombre_usuario]'@'[contexto]' USING [nombre_rol];
+
+
+
+
+// Conceder y revocar privilegios a un rol
+
+	GRANT [privilegios] 
+	ON [base_datos].[tabla] 
+	TO '[nombre_rol]'; 
+
+	REVOKE [privilegios] 
+	ON [base_datos].[tabla] 
+	FROM '[nombre_rol]';
+
+// Conceder y revocar roles a un usuario
+
+	GRANT nombre_rol 
+	TO '[nombre_usuario]'@'[contexto]';
+
+	REVOKE nombre_rol 
+	FROM '[nombre_usuario]'@'[contexto]';
+
+
+
+
+// Cargar un rol
+
+	SET ROLE nombre_rol;
+
+	SET ROLE ALL;
+
+	SET ROLE NONE;
+
+
+
+
+// Cambios a nivel sesión
+
+	SHOW VARIABLES LIKE '%rol%';

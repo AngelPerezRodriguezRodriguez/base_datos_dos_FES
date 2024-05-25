@@ -1,0 +1,82 @@
+// Opción 01
+
+	GRANT 
+		[privilegio] ([campos]), 
+		SHOW VIEW 
+	ON [base_datos].[tabla] 
+	TO '[nombre_usuario]'@'[contexto]';
+
+
+	REVOKE 
+		[privilegio] ([campos]), 
+		SHOW VIEW 
+	ON [base_datos].[tabla] 
+	FROM '[nombre_usuario]'@'[contexto]';
+
+
+SHOW GRANTS FOR '[nombre_usuario]'@'[contexto]';
+
+
+
+
+// Opción 02
+
+	CREATE OR REPLACE VIEW [nombre_vista] AS
+		SELECT 
+			[campos]
+		FROM 
+			[tabla];
+
+
+	SELECT 
+		* 
+	FROM 
+		[nombre_vista];
+
+
+	DROP VIEW [nombre_vista];
+
+
+
+
+// Conceder y revocar vistas
+	
+	GRANT SELECT 
+	ON [base_datos].[nombre_vista] 
+	TO '[nombre_usuario]'@'[contexto]';
+	
+
+	REVOKE SELECT
+	ON [base_datos].[nombre_vista] 
+	FROM '[nombre_usuario]'@'[contexto]';
+
+
+	SHOW GRANTS FOR '[nombre_usuario]'@'[contexto]';
+
+
+
+
+// Visualizar vistas
+
+	SHOW TABLES;
+
+
+	SELECT 
+    		*
+	FROM
+    		information_schema.TABLES
+	WHERE
+    		table_schema = [base_datos]
+        		AND table_type = 'VIEW';
+
+
+
+
+// Verificar que la lista de privilegios coincida con nuestra matriz de autorización
+
+	SELECT 
+    		*
+	FROM
+    		information_schema.table_privileges
+	WHERE
+    		table_schema = [base_datos];
